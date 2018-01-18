@@ -20,7 +20,7 @@ class App extends Component {
   
   componentDidMount(){
     let self = this;
-    axios.get('http://nodeserver-arunreturns.c9.io:8081/list').then(function(response){
+    axios.get('/list').then(function(response){
       self.setState({
         currencies: response.data
       });
@@ -29,7 +29,7 @@ class App extends Component {
   
   getCurrencyInfo(currency){
     let self = this;
-    axios.get('http://nodeserver-arunreturns.c9.io:8081/info/' + currency.name).then(function(response){
+    axios.get('/info/' + currency.name).then(function(response){
       let { currencyData, currencyInfo } = self.state;
       currencyInfo[currency.name] = response.data;
       currencyData[currency.name] = currency;
