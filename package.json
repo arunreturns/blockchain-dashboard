@@ -18,8 +18,12 @@
     "method-override": "^2.3.9",
     "mongoose": "^4.10.3",
     "morgan": "^1.8.2",
+    "node-sqlite": "0.0.2-security",
     "path": "^0.12.7",
+    "pg-promise": "^7.3.3",
     "serve-favicon": "^2.4.3",
+    "sqlite": "^2.9.1",
+    "sqlite3": "^3.1.13",
     "useragent": "^2.1.13"
   },
   "devDependencies": {

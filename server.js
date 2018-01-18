@@ -7,7 +7,7 @@ const Port = 8081;
 
 require('./server/serverConfig.js')(App);
 
-App.use(Express.static(__dirname + '/public'));
+App.use(Express.static(__dirname + '/frontend/build'));
 
 App.listen(Port, function() {
     console.log('Listening on port [%d]', Port);
