@@ -1,8 +1,21 @@
 const sqlite3 = require('sqlite3').verbose();
 const Path = require('path');
 
+
 module.exports = function(App) {
+    const DB_URL = "https://media.githubusercontent.com/media/arunreturns/blockchain-dashboard/master/server/database/ticker.db";
     const DBPath = Path.join(__dirname, 'database', 'ticker.db');
+
+    const http = require('http');
+    const fs = require('fs');
+    
+    if ( !fs.existsSync(DBPath) ){
+        console.log("Downloading DB");
+        let file = fs.createWriteStream(DBPath);
+        http.get(DB_URL, function(response) {
+          response.pipe(file);
+        });
+    }
 
     App.get("/list", function(req, res){
         // res.sendFile(Path.join(__dirname, 'mock.json'))
