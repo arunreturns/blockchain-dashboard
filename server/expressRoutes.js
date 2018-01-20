@@ -1,7 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const Path = require('path');
 const DBName = process.env.DB_NAME || 'ticker.db';
-const DBPath = Path.join(__dirname, 'database', DBName);
+const DBPath = Path.join(__dirname, DBName);
 const fs = require('fs');
 
 module.exports = function(App) {

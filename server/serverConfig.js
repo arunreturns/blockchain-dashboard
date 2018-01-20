@@ -9,7 +9,7 @@ const fs = require('fs');
 
 const DB_URL = process.env.DB_URL;
 const DBName = process.env.DB_NAME || 'ticker.db';
-const DBPath = Path.join(__dirname, 'database', DBName);
+const DBPath = Path.join(__dirname, DBName);
 
 function getFile(){
     console.log("Getting file", DBName);
