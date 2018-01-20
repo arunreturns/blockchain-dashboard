@@ -8,7 +8,8 @@ const Favicon = require('serve-favicon');
 const fs = require('fs');
 
 const DB_URL = "https://media.githubusercontent.com/media/arunreturns/blockchain-dashboard/master/server/database/ticker.db";
-const DBPath = Path.join(__dirname, 'database', 'ticker.db');
+const DBName = process.env.DB_NAME || 'ticker.db';
+const DBPath = Path.join(__dirname, 'database', DBName);
 
 function getFile(){
     console.log("Getting file");
@@ -16,6 +17,7 @@ function getFile(){
     request.get(DB_URL).pipe(fs.createWriteStream(DBPath));
 }
 function fetchDB(){
+    console.log("Checking for DB", DBName);
     try {
         const stats = fs.statSync(DBPath);
         if ( stats.size === 0 )
