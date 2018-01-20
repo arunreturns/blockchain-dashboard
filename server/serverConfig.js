@@ -12,9 +12,11 @@ const DBName = process.env.DB_NAME || 'ticker.db';
 const DBPath = Path.join(__dirname, 'database', DBName);
 
 function getFile(){
-    console.log("Getting file");
+    console.log("Getting file", DBName);
     const request = require('request');
-    request.get(DB_URL).pipe(fs.createWriteStream(DBPath));
+    request.get(DB_URL).pipe(fs.createWriteStream(DBPath)).on('end', function () {
+        console.log('Fetch completed for', DBName);
+    });
 }
 function fetchDB(){
     console.log("Checking for DB", DBName);

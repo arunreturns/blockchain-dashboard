@@ -1,6 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const Path = require('path');
-const DBPath = Path.join(__dirname, 'database', 'ticker.db');
+const DBName = process.env.DB_NAME || 'ticker.db';
+const DBPath = Path.join(__dirname, 'database', DBName);
 
 module.exports = function(App) {
     App.get("/list", function(req, res){
@@ -17,9 +18,9 @@ module.exports = function(App) {
             function(err, rows) {
                 if (err){
                     console.log(err);
-                    res.send(err);
+                    res.status(500).send(err);
                 }
-                res.send(rows);
+                res.status(200).send(rows);
             });
         });
         db.close();
@@ -31,9 +32,9 @@ module.exports = function(App) {
         db.all("SELECT *, DATETIME(last_updated, 'unixepoch') AS last_upd FROM ticker_info WHERE name = ? ORDER BY last_updated", req.params.currencyName, function(err, rows) {
             if (err){
                 console.log(err);
-                res.send(err);
+                res.status(500).send(err);
             }
-            res.send(rows);
+            res.status(200).send(rows);
         });
         
         db.close();

@@ -24,6 +24,8 @@ class App extends Component {
       self.setState({
         currencies: response.data || []
       });
+    }).catch((e) => {
+      console.log(e);
     });
   }
   
