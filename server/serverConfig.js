@@ -14,9 +14,9 @@ const DBPath = Path.join(__dirname, 'database', DBName);
 function getFile(){
     console.log("Getting file", DBName);
     const request = require('request');
-    request.get(DB_URL).pipe(fs.createWriteStream(DBPath)).on('end', function () {
+    request.get(DB_URL).on('end', function () {
         console.log('Fetch completed for', DBName);
-    });
+    }).pipe(fs.createWriteStream(DBPath));
 }
 function fetchDB(){
     console.log("Checking for DB", DBName);
