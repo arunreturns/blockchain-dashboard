@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios';
-const LineChart = require("react-chartjs").Line;
+const LineChart = require("react-chartjs-2").Line;
 const apiPath = process.env.REACT_APP_API_ROOT || "";
+
+const labelMap= {
+  price_usd: 'Price',
+  volume_usd_24h: 'Volume',
+  market_cap_usd: 'Market Cap'
+};
+
 class App extends Component {
   constructor(){
     super();
@@ -40,6 +47,9 @@ class App extends Component {
         let { currencyData, currencyInfo } = self.state;
         currencyInfo[currency.name] = response.data;
         currencyData[currency.name] = currency;
+        currencyData[currency.name].selected_price = currencyData[currency.name].selected_price || currency.price_usd;
+        currencyData[currency.name].type = 'price_usd';
+        currencyData[currency.name].range = 1;
         self.setState({
           currencyInfo,
           currencyData,
@@ -56,7 +66,7 @@ class App extends Component {
     if ( typeof currencyData === 'undefined' || Object.keys(currencyData).length === 0 )
       return false;
     return <li className="nav-item">
-      <a className="nav-link">{currencyId} - {currencyData.price_usd}</a>
+      <a className="nav-link">{currencyId} - {currencyData.selected_price}</a>
     </li>;
   }
   
@@ -78,26 +88,31 @@ class App extends Component {
     this.forceUpdate();
   }
   
-  generateLabels(range){
-    if ( range === 1 ){
-      return Array(12).fill(1).map((i, idx) => idx + 1);
+  chartElemClick(chartData, chartElement){
+    let { currencyData, selectedCurrency } = this.state;
+    if ( currencyData[selectedCurrency].type === 'price_usd') {
+      let chartElemIndex = chartElement[0] ? chartElement[0]._index : 0;
+      currencyData[selectedCurrency].selected_price = chartData[chartElemIndex];
+      this.setState({currencyData});
     }
   }
   
-  getData(chartData){
+  getData(chartData, currencyData){
     let labels = chartData.map(i => "");
     return {
       labels: labels,
     	datasets: [
     		{
-    			label: "Volume",
+    			label: labelMap[currencyData.type],
     			fillColor: "rgba(151,187,205,0.2)",
     			strokeColor: "rgba(151,187,205,1)",
     			//pointColor: "rgba(151,187,205,1)",
     			//pointStrokeColor: "#fff",
     			//pointHighlightFill: "#fff",
     			//pointHighlightStroke: "rgba(151,187,205,1)",
-    			data: chartData
+    			data: chartData,
+    			showLines: false,
+    			spanGaps: false
     		}
     	]
     };
@@ -134,17 +149,17 @@ class App extends Component {
         	//Number - Width of the grid lines
         	scaleGridLineWidth : 1,
         	//Boolean - Whether to show horizontal lines (except X axis)
-        	scaleShowHorizontalLines: true,
+        	// scaleShowHorizontalLines: true,
         	//Boolean - Whether to show vertical lines (except Y axis)
-        	scaleShowVerticalLines: true,
+        	// scaleShowVerticalLines: true,
         	//Boolean - Whether the line is curved between points
-        	bezierCurve : true,
+        	// bezierCurve : false,
         	//Number - Tension of the bezier curve between points
-        	bezierCurveTension : 0.4,
+        	// bezierCurveTension : 0.4,
         	//Boolean - Whether to show a dot for each point
         	pointDot : false,
         	//Number - Radius of each point dot in pixels
-        	pointDotRadius : 4,
+        	pointDotRadius : 2,
         	//Number - Pixel width of point dot stroke
         	pointDotStrokeWidth : 1,
         	//Number - amount extra to add to the radius to cater for hit detection outside the drawn point
@@ -156,12 +171,24 @@ class App extends Component {
         	//Boolean - Whether to fill the dataset with a colour
         	datasetFill : true,
         	//Boolean - Whether to horizontally center the label and point dot inside the grid
-        	offsetGridLines : false
+        	offsetGridLines : false,
+        // 	elements: {
+        //     line: {
+        //       tension: 0, // disables bezier curves
+        //     }
+        //   },
+          animation: {
+            duration: 0, // general animation time
+          },
+          hover: {
+            animationDuration: 0, // duration of animations when hovering an item
+          },
+          responsiveAnimationDuration: 0, // animation duration after a resize
         };
         
         let chartKey = `${id}-chart`;
         chartRows = [ <tr>
-          <td colSpan='3'>
+          <td colSpan='3' className="text-left">
             <div className="btn-group btn-group-toggle" data-toggle="buttons">
               <label className={currencyData.type === 'price_usd' ? "btn btn-secondary active" : "btn btn-secondary"}>
                 <input type="checkbox" checked={currencyData.type === 'price_usd'} onClick={this.setType.bind(this, 'price_usd')} autoComplete="off" /> Price
@@ -174,7 +201,7 @@ class App extends Component {
               </label>
             </div>
           </td>
-          <td colSpan='3'>
+          <td colSpan='3' className="text-right">
             <div className="btn-group btn-group-toggle" data-toggle="buttons">
               <label className={currencyData.range === 1 ? "btn btn-secondary active" : "btn btn-secondary"}>
                 <input type="checkbox" checked={currencyData.range === 1} onClick={this.setRange.bind(this, 1)} autoComplete="off" /> 24H
@@ -190,7 +217,7 @@ class App extends Component {
         </tr>,
         <tr>
           <td colSpan="6">
-            <LineChart key={chartKey} ref={chartKey} data={this.getData(chartData)} width="800px" options={chartOptions} />
+            <LineChart key={chartKey} ref={chartKey} data={this.getData(chartData, currencyData)} width={800} options={chartOptions} onElementsClick={this.chartElemClick.bind(this, chartData)}/>
           </td>
         </tr>
         ];
