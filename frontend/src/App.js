@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios';
 const LineChart = require("react-chartjs").Line;
-
+const apiPath = process.env.REACT_APP_API_ROOT || "";
 class App extends Component {
   constructor(){
     super();
@@ -20,7 +20,7 @@ class App extends Component {
   
   componentDidMount(){
     let self = this;
-    axios.get('/list').then(function(response){
+    axios.get(apiPath + '/list').then(function(response){
       self.setState({
         currencies: response.data || []
       });
@@ -36,7 +36,7 @@ class App extends Component {
         selectedCurrency: `${currency.name}`
       });
     } else {
-      axios.get('/info/' + currency.name).then(function(response){
+      axios.get(apiPath + '/info/' + currency.name).then(function(response){
         let { currencyData, currencyInfo } = self.state;
         currencyInfo[currency.name] = response.data;
         currencyData[currency.name] = currency;
@@ -141,28 +141,20 @@ class App extends Component {
         	bezierCurve : true,
         	//Number - Tension of the bezier curve between points
         	bezierCurveTension : 0.4,
-        
         	//Boolean - Whether to show a dot for each point
         	pointDot : false,
-        
         	//Number - Radius of each point dot in pixels
         	pointDotRadius : 4,
-        
         	//Number - Pixel width of point dot stroke
         	pointDotStrokeWidth : 1,
-        
         	//Number - amount extra to add to the radius to cater for hit detection outside the drawn point
         	pointHitDetectionRadius : 4,
-        
         	//Boolean - Whether to show a stroke for datasets
         	datasetStroke : true,
-        
         	//Number - Pixel width of dataset stroke
         	datasetStrokeWidth : 2,
-        
         	//Boolean - Whether to fill the dataset with a colour
         	datasetFill : true,
-        
         	//Boolean - Whether to horizontally center the label and point dot inside the grid
         	offsetGridLines : false
         };
