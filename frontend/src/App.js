@@ -22,7 +22,7 @@ class App extends Component {
     let self = this;
     axios.get('/list').then(function(response){
       self.setState({
-        currencies: response.data
+        currencies: response.data || []
       });
     });
   }

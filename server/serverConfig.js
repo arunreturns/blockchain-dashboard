@@ -22,6 +22,7 @@ function fetchDB(){
             getFile();
         else 
             console.log("File already exists");
+            console.log("Size", stats.size);
     } catch (e){
         getFile();
     }
