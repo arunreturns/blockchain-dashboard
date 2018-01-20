@@ -9,3 +9,11 @@
 tr, td, label {
   cursor: pointer;
 }
+
+.noPadding {
+  padding: 0 !important;
+}
+
+.flat-progress {
+  height: 0.2rem;
+}

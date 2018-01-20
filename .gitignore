@@ -4,4 +4,4 @@ backend/server/tickerout.txt
 npm-debug.log
 server/mock
 server/database
-server/ticker_info.db
+server/*.db
