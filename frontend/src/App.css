@@ -5,3 +5,7 @@
 .Green {
   color: green;
 }
+
+tr, td, label {
+  cursor: pointer;
+}

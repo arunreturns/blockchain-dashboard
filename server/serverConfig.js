@@ -7,7 +7,7 @@ const Path = require('path');
 const Favicon = require('serve-favicon');
 const fs = require('fs');
 
-const DB_URL = "https://media.githubusercontent.com/media/arunreturns/blockchain-dashboard/master/server/database/ticker.db";
+const DB_URL = process.env.DB_URL;
 const DBName = process.env.DB_NAME || 'ticker.db';
 const DBPath = Path.join(__dirname, 'database', DBName);
 
